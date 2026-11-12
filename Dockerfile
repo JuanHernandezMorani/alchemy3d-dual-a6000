@@ -62,7 +62,7 @@ RUN cd /workspace/repos/Alchemy3D && bash -lc 'set -e; . ./setup.sh --flash-attn
 RUN cd /workspace/repos/Alchemy3D && bash -lc 'set -e; . ./setup.sh --blender'
 
 RUN python -c 'import torch; assert torch.version.cuda is not None, "CUDA PyTorch missing"; print("[CUDA BUILD] PyTorch", torch.__version__, "CUDA", torch.version.cuda)' \
-    && python -m pip show o_voxel flash-attn nvdiffrast nvdiffrec flex_gemm cumesh >/dev/null \
+    && python -m pip show o_voxel flash-attn nvdiffrast nvdiffrec_render flex_gemm cumesh >/dev/null \
     && touch /opt/lab/.cuda-extensions-built \
     && rm -rf /tmp/extensions
 
