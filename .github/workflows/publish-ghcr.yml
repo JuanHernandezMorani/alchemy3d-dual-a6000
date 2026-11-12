@@ -3,7 +3,12 @@ name: Publish dual A6000 CUDA image
 on:
   workflow_dispatch:
   push:
+    branches: [main]
     tags: ["v*"]
+
+concurrency:
+  group: publish-ghcr-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
