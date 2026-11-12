@@ -1,0 +1,23 @@
+{
+  "source": {
+    "alchemy_git": "0d74142b83ea4f7a24c0c417de769a3489332a3f",
+    "trellis_git": "75fbf0183001ed9876c8dbb35de6b68552ee08bd"
+  },
+  "model_revisions": {
+    "Base": ["libadi/Alchemy3D", "65a1a0af68cf31343dcf3bf9495fe62c0e169a3c"],
+    "Instruct": ["libadi/Alchemy3D-Instruct", "a84a84b9d03fe0ea3dd57f62ffc456673d4b7234"],
+    "Turbo": ["libadi/Alchemy3D-Turbo", "856ccad4dd081ac85e462cd206740fa312c77867"],
+    "Flux": ["libadi/Alchemy3D-Flux", "ee7a6261bf90b437617e62f3526b3d4807daaeb8"],
+    "Segment": ["libadi/Alchemy3D-Segment", "7f000bd7e0f980bdc189f3b000053b8c9193bd07"]
+  },
+  "external_revisions": {
+    "microsoft/TRELLIS.2-4B": "af44b45f2e35a493886929c6d786e563ec68364d",
+    "Qwen/Qwen3.5-2B": "15852e8c16360a2fea060d615a32b45270f8a8fc"
+  },
+  "source_expected_sha256": {
+    "ties": "ccded6a2a8eb594953f27981bbce7d6257683f24da6e87282f0665be433d647e",
+    "deltas": "8369a8536cf158ff1b2a23b958872415d3ab110d5c64cdfb493b91f1b73b262c",
+    "trim_mean": "44d1999d3fa5727f8365bfb3dd51bd1cbff97fa20569407ade61a7242315dfbd",
+    "deltas_cap": "0167e94e0e67e4c9553ac04ab545e42a6e6d67047e546a39f6d1c11ffd6c0523"
+  }
+}

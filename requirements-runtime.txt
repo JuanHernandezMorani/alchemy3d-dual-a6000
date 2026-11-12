@@ -1,0 +1,10 @@
+huggingface_hub>=0.35,<2
+safetensors>=0.5,<1
+numpy>=1.26,<3
+pandas>=2.0,<3
+trimesh>=4,<5
+pillow>=10,<12
+psutil>=6,<8
+fastapi>=0.115,<1
+uvicorn>=0.30,<1
+httpx>=0.27,<1

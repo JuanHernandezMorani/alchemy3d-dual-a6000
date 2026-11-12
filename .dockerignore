@@ -1,0 +1,13 @@
+.git
+__pycache__
+*.pyc
+*.gguf
+*.safetensors
+*.glb
+*.zip
+weights/
+results/
+logs/
+.hf/
+.venv/
+venv/
