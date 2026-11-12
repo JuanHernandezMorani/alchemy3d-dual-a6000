@@ -43,16 +43,28 @@ RUN python -m pip install -r requirements-runtime.txt
 # Immutable upstream source refs recorded in config/revisions.json.
 RUN bash /opt/lab/scripts/clone_sources.sh
 
-# Alchemy3D's official CUDA dependencies are built into the IMAGE, not on GPU rental.
-# This step is intentionally strict: if CUDA compilation fails, the image does not publish.
-RUN if [ "$INSTALL_FULL_EXTENSIONS" = "1" ]; then \
-      cd /workspace/repos/Alchemy3D && \
-      bash -lc '. ./setup.sh --basic --flash-attn --nvdiffrast --nvdiffrec --cumesh --flexgemm --blender' && \
-      python -m pip install /workspace/repos/TRELLIS.2/o-voxel --no-build-isolation && \
-      touch /opt/lab/.cuda-extensions-built; \
-    else \
-      echo "WARN: Image built without CUDA extensions (diagnostics only)"; \
-    fi
+# GitHub Actions has CUDA nvcc but does not expose a physical NVIDIA GPU.
+# Patch upstream's BUILD-TIME device detection only; never fake GPU availability
+# at runtime. CUDA extensions remain strictly required for release images.
+RUN python /opt/lab/scripts/patch_alchemy_setup.py && nvcc --version
+
+ENV ALCHEMY_BUILD_PLATFORM=cuda
+
+# Independent cached steps make extension build failures diagnosable/retryable.
+# setup.sh is sourced because upstream uses 'return' for --help.
+RUN cd /workspace/repos/Alchemy3D && bash -lc 'set -e; . ./setup.sh --basic'
+RUN cd /workspace/repos/Alchemy3D && bash -lc 'set -e; . ./setup.sh --nvdiffrast'
+RUN cd /workspace/repos/Alchemy3D && bash -lc 'set -e; . ./setup.sh --nvdiffrec'
+RUN cd /workspace/repos/Alchemy3D && bash -lc 'set -e; . ./setup.sh --cumesh'
+RUN cd /workspace/repos/Alchemy3D && bash -lc 'set -e; . ./setup.sh --flexgemm'
+RUN python -m pip install /workspace/repos/TRELLIS.2/o-voxel --no-build-isolation
+RUN cd /workspace/repos/Alchemy3D && bash -lc 'set -e; . ./setup.sh --flash-attn'
+RUN cd /workspace/repos/Alchemy3D && bash -lc 'set -e; . ./setup.sh --blender'
+
+RUN python -c 'import torch; assert torch.version.cuda is not None, "CUDA PyTorch missing"; print("[CUDA BUILD] PyTorch", torch.__version__, "CUDA", torch.version.cuda)' \
+    && python -m pip show o_voxel flash-attn nvdiffrast nvdiffrec flex_gemm cumesh >/dev/null \
+    && touch /opt/lab/.cuda-extensions-built \
+    && rm -rf /tmp/extensions
 
 # Pin llama.cpp commit to include the current Qwen3.8 architecture and CUDA server.
 RUN if [ "$BUILD_LLAMA" = "1" ]; then \
